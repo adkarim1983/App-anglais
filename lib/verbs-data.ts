@@ -1,10 +1,84 @@
 import { Verb } from './verbs'
 
 export const ALL_VERBS_DATA: Omit<Verb, 'id'>[] = [
-  { english: 'Learn', french: 'Apprendre', present: 'learns', past: 'learned', future: 'will learn', presentPerfect: 'has learned', example: 'She learns new languages every year.', category: 'learning', difficulty: 'easy' },
-  { english: 'Write', french: 'Écrire', present: 'writes', past: 'wrote', future: 'will write', presentPerfect: 'has written', example: 'He writes beautiful poetry.', category: 'creation', difficulty: 'medium' },
-  { english: 'Speak', french: 'Parler', present: 'speaks', past: 'spoke', future: 'will speak', presentPerfect: 'has spoken', example: 'They speak three languages fluently.', category: 'communication', difficulty: 'medium' },
-  { english: 'Understand', french: 'Comprendre', present: 'understands', past: 'understood', future: 'will understand', presentPerfect: 'has understood', example: 'I understand the importance of practice.', category: 'thinking', difficulty: 'medium' },
+  { 
+    english: 'Learn', 
+    french: 'Apprendre', 
+    present: 'learns', 
+    past: 'learned', 
+    future: 'will learn', 
+    presentPerfect: 'has learned', 
+    example: 'She learns new languages every year.',
+    exampleFr: 'Elle apprend de nouvelles langues chaque année.',
+    category: 'learning', 
+    difficulty: 'easy',
+    synonyms: ['study', 'master', 'acquire'],
+    antonyms: ['forget', 'ignore', 'unlearn'],
+    idioms: [
+      { english: 'Learn the ropes', french: 'Apprendre les ficelles du métier' },
+      { english: 'Learn by heart', french: 'Apprendre par cœur' }
+    ],
+    businessContext: 'Our team learns new technologies to stay competitive in the market.'
+  },
+  { 
+    english: 'Write', 
+    french: 'Écrire', 
+    present: 'writes', 
+    past: 'wrote', 
+    future: 'will write', 
+    presentPerfect: 'has written', 
+    example: 'He writes beautiful poetry.',
+    exampleFr: 'Il écrit de la belle poésie.',
+    category: 'creation', 
+    difficulty: 'medium',
+    isIrregular: true,
+    pastParticiple: 'written',
+    synonyms: ['compose', 'author', 'draft'],
+    antonyms: ['erase', 'delete', 'read'],
+    idioms: [
+      { english: 'Write off', french: 'Radier, abandonner' },
+      { english: 'Write down', french: 'Noter, écrire' }
+    ],
+    businessContext: 'Please write a detailed report on the project progress by Friday.'
+  },
+  { 
+    english: 'Speak', 
+    french: 'Parler', 
+    present: 'speaks', 
+    past: 'spoke', 
+    future: 'will speak', 
+    presentPerfect: 'has spoken', 
+    example: 'They speak three languages fluently.',
+    exampleFr: 'Ils parlent trois langues couramment.',
+    category: 'communication', 
+    difficulty: 'medium',
+    isIrregular: true,
+    pastParticiple: 'spoken',
+    synonyms: ['talk', 'communicate', 'express'],
+    antonyms: ['listen', 'silence', 'mute'],
+    idioms: [
+      { english: 'Speak your mind', french: 'Dire ce que l\'on pense' },
+      { english: 'Speak volumes', french: 'En dire long' }
+    ],
+    businessContext: 'She will speak at the international conference next month.'
+  },
+  { 
+    english: 'Understand', 
+    french: 'Comprendre', 
+    present: 'understands', 
+    past: 'understood', 
+    future: 'will understand', 
+    presentPerfect: 'has understood', 
+    example: 'I understand the importance of practice.',
+    exampleFr: 'Je comprends l\'importance de la pratique.',
+    category: 'thinking', 
+    difficulty: 'medium',
+    isIrregular: true,
+    pastParticiple: 'understood',
+    synonyms: ['comprehend', 'grasp', 'realize'],
+    antonyms: ['misunderstand', 'confuse', 'misinterpret'],
+    businessContext: 'It\'s crucial to understand customer needs before developing new products.'
+  },
   { english: 'Create', french: 'Créer', present: 'creates', past: 'created', future: 'will create', presentPerfect: 'has created', example: 'She creates amazing digital art.', category: 'creation', difficulty: 'easy' },
   { english: 'Explore', french: 'Explorer', present: 'explores', past: 'explored', future: 'will explore', presentPerfect: 'has explored', example: 'They explore new countries every summer.', category: 'action', difficulty: 'easy' },
   { english: 'Achieve', french: 'Réaliser', present: 'achieves', past: 'achieved', future: 'will achieve', presentPerfect: 'has achieved', example: 'He achieves his goals through dedication.', category: 'action', difficulty: 'medium' },

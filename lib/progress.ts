@@ -9,6 +9,11 @@ export interface UserProgress {
   dailyGoal: number
   dailyProgress: number
   studyHistory: Record<string, number> // date -> nombre de verbes étudiés
+  verbsByDate: Record<string, number[]> // date -> IDs des verbes appris ce jour
+  quizCompleted: number // Nombre de quiz complétés
+  quizPerfectScores: number // Nombre de quiz avec 100%
+  totalStudyTime: number // Temps d'étude total en minutes
+  challenges: Record<string, boolean> // Défis quotidiens complétés
 }
 
 const STORAGE_KEY = 'daily-verbs-progress'
@@ -42,6 +47,21 @@ export function getUserProgress(): UserProgress {
     if (!progress.studyHistory) {
       progress.studyHistory = {}
     }
+    if (!progress.verbsByDate) {
+      progress.verbsByDate = {}
+    }
+    if (progress.quizCompleted === undefined) {
+      progress.quizCompleted = 0
+    }
+    if (progress.quizPerfectScores === undefined) {
+      progress.quizPerfectScores = 0
+    }
+    if (progress.totalStudyTime === undefined) {
+      progress.totalStudyTime = 0
+    }
+    if (!progress.challenges) {
+      progress.challenges = {}
+    }
     
     return progress
   } catch (error) {
@@ -70,9 +90,12 @@ export function markVerbAsLearned(verbId: number): UserProgress {
   const progress = getUserProgress()
   const today = new Date().toISOString().split('T')[0]
   
-  // S'assurer que studyHistory existe
+  // S'assurer que studyHistory et verbsByDate existent
   if (!progress.studyHistory) {
     progress.studyHistory = {}
+  }
+  if (!progress.verbsByDate) {
+    progress.verbsByDate = {}
   }
   
   if (!progress.learnedVerbIds.includes(verbId)) {
@@ -85,6 +108,14 @@ export function markVerbAsLearned(verbId: number): UserProgress {
     }
     progress.studyHistory[today] += 1
     progress.dailyProgress = progress.studyHistory[today]
+    
+    // Ajouter le verbe à la liste des verbes appris aujourd'hui
+    if (!progress.verbsByDate[today]) {
+      progress.verbsByDate[today] = []
+    }
+    if (!progress.verbsByDate[today].includes(verbId)) {
+      progress.verbsByDate[today].push(verbId)
+    }
     
     // Mettre à jour la série (streak)
     const lastDate = progress.lastStudyDate
@@ -204,11 +235,105 @@ export function isVerbLearned(verbId: number): boolean {
 }
 
 /**
+ * Obtient les verbes appris à une date donnée
+ */
+export function getVerbsByDate(date: string): number[] {
+  const progress = getUserProgress()
+  if (!progress.verbsByDate) {
+    return []
+  }
+  return progress.verbsByDate[date] || []
+}
+
+/**
  * Obtient l'historique d'étude
  */
 export function getStudyHistory(): Record<string, number> {
   const progress = getUserProgress()
   return progress.studyHistory || {}
+}
+
+/**
+ * Obtient tous les verbes par date
+ */
+export function getAllVerbsByDate(): Record<string, number[]> {
+  const progress = getUserProgress()
+  return progress.verbsByDate || {}
+}
+
+/**
+ * Enregistrer la complétion d'un quiz
+ */
+export function recordQuizCompletion(score: number, totalQuestions: number): UserProgress {
+  const progress = getUserProgress()
+  progress.quizCompleted += 1
+  
+  if (score === totalQuestions) {
+    progress.quizPerfectScores += 1
+  }
+  
+  saveUserProgress(progress)
+  return progress
+}
+
+/**
+ * Ajouter du temps d'étude
+ */
+export function addStudyTime(minutes: number): UserProgress {
+  const progress = getUserProgress()
+  progress.totalStudyTime += minutes
+  saveUserProgress(progress)
+  return progress
+}
+
+/**
+ * Marquer un défi comme complété
+ */
+export function completeChallenge(challengeId: string): UserProgress {
+  const progress = getUserProgress()
+  const today = new Date().toISOString().split('T')[0]
+  const key = `${today}-${challengeId}`
+  progress.challenges[key] = true
+  saveUserProgress(progress)
+  return progress
+}
+
+/**
+ * Vérifier si un défi est complété aujourd'hui
+ */
+export function isChallengeCompleted(challengeId: string): boolean {
+  const progress = getUserProgress()
+  const today = new Date().toISOString().split('T')[0]
+  const key = `${today}-${challengeId}`
+  return progress.challenges[key] || false
+}
+
+/**
+ * Obtenir les statistiques complètes
+ */
+export function getCompleteStats(): {
+  totalVerbs: number
+  streak: number
+  quizCompleted: number
+  quizPerfectScores: number
+  totalStudyTime: number
+  averageDaily: number
+  masteredVerbs: number
+} {
+  const progress = getUserProgress()
+  const history = progress.studyHistory || {}
+  const days = Object.keys(history).length
+  const averageDaily = days > 0 ? Math.round(progress.totalVerbsLearned / days) : 0
+  
+  return {
+    totalVerbs: progress.totalVerbsLearned,
+    streak: progress.streak,
+    quizCompleted: progress.quizCompleted || 0,
+    quizPerfectScores: progress.quizPerfectScores || 0,
+    totalStudyTime: progress.totalStudyTime || 0,
+    averageDaily,
+    masteredVerbs: 0 // Sera calculé depuis spaced-repetition
+  }
 }
 
 /**
@@ -224,6 +349,11 @@ function getDefaultProgress(): UserProgress {
     dailyGoal: 10,
     dailyProgress: 0,
     studyHistory: {},
+    verbsByDate: {},
+    quizCompleted: 0,
+    quizPerfectScores: 0,
+    totalStudyTime: 0,
+    challenges: {},
   }
 }
 

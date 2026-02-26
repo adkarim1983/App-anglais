@@ -1,6 +1,6 @@
 // Gestion du thème (clair/sombre)
 
-export type Theme = 'light' | 'dark' | 'system'
+export type Theme = 'light' | 'dark'
 
 const THEME_KEY = 'daily-verbs-theme'
 
@@ -8,13 +8,13 @@ const THEME_KEY = 'daily-verbs-theme'
  * Obtient le thème actuel
  */
 export function getTheme(): Theme {
-  if (typeof window === 'undefined') return 'system'
+  if (typeof window === 'undefined') return 'light'
   
   try {
     const stored = localStorage.getItem(THEME_KEY)
-    return (stored as Theme) || 'system'
+    return (stored as Theme) || 'light'
   } catch {
-    return 'system'
+    return 'light'
   }
 }
 
@@ -39,13 +39,7 @@ export function applyTheme(theme: Theme): void {
   if (typeof window === 'undefined') return
   
   const root = document.documentElement
-  
-  if (theme === 'system') {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    root.classList.toggle('dark', prefersDark)
-  } else {
-    root.classList.toggle('dark', theme === 'dark')
-  }
+  root.classList.toggle('dark', theme === 'dark')
 }
 
 /**
@@ -54,13 +48,14 @@ export function applyTheme(theme: Theme): void {
 export function initTheme(): void {
   const theme = getTheme()
   applyTheme(theme)
-  
-  // Écouter les changements de préférence système
-  if (theme === 'system') {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      if (getTheme() === 'system') {
-        document.documentElement.classList.toggle('dark', e.matches)
-      }
-    })
-  }
+}
+
+/**
+ * Bascule entre clair et sombre
+ */
+export function toggleTheme(): Theme {
+  const currentTheme = getTheme()
+  const newTheme: Theme = currentTheme === 'light' ? 'dark' : 'light'
+  setTheme(newTheme)
+  return newTheme
 }

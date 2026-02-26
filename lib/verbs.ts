@@ -9,8 +9,15 @@ export interface Verb {
   future: string
   presentPerfect: string
   example: string
+  exampleFr?: string // Traduction de l'exemple
   category: VerbCategory
   difficulty: 'easy' | 'medium' | 'hard'
+  isIrregular?: boolean
+  pastParticiple?: string // Pour les verbes irréguliers
+  synonyms?: string[] // Synonymes
+  antonyms?: string[] // Antonymes
+  idioms?: { english: string; french: string }[] // Expressions idiomatiques
+  businessContext?: string // Exemple contexte professionnel
 }
 
 import { ALL_VERBS } from './verbs-data'

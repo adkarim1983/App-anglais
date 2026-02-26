@@ -97,31 +97,31 @@ export default function Home() {
         <div className="absolute -bottom-8 left-20 w-96 h-96 bg-primary/15 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" style={{ animationDelay: '4s' }} />
       </div>
 
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border/20 bg-background/80 backdrop-blur-xl shadow-sm">
+      {/* Header - Fixed navbar */}
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200 dark:border-slate-700/50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl shadow-sm">
         <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-4">
             <div className="space-y-1 flex-1">
-              <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent sm:text-3xl">
+              <h1 className="text-2xl font-bold tracking-tight text-blue-700 dark:text-blue-400 sm:text-3xl">
                 Daily English Verbs
               </h1>
-              <p className="text-sm text-muted-foreground font-light">
+              <p className="text-sm text-slate-600 dark:text-slate-400 font-light">
                 Maîtrisez 10 nouveaux verbes chaque jour
               </p>
             </div>
 
             {/* Progression quotidienne */}
-            <div className="hidden md:flex items-center gap-4 px-4 py-2 rounded-lg bg-gradient-to-r from-primary/10 to-accent/10 border border-border/30">
+            <div className="hidden md:flex items-center gap-4 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border border-blue-200 dark:border-blue-800/50">
               <div className="text-center">
-                <p className="text-xs text-muted-foreground">Aujourd'hui</p>
-                <p className="text-lg font-bold text-primary">
+                <p className="text-xs text-slate-600 dark:text-slate-400">Aujourd'hui</p>
+                <p className="text-lg font-bold text-blue-600 dark:text-blue-400">
                   {dailyProgress.current}/{dailyProgress.goal}
                 </p>
               </div>
-              <div className="h-8 w-px bg-border/50" />
+              <div className="h-8 w-px bg-slate-300 dark:bg-slate-600" />
               <div className="text-center">
-                <p className="text-xs text-muted-foreground">Série</p>
-                <p className="text-lg font-bold text-accent">{progress.streak} 🔥</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400">Série</p>
+                <p className="text-lg font-bold text-purple-600 dark:text-purple-400">{progress.streak} 🔥</p>
               </div>
             </div>
 
@@ -148,27 +148,26 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      {/* Hero Section - avec padding pour la navbar fixe */}
+      <section className="relative mx-auto max-w-7xl px-4 pt-32 pb-16 sm:px-6 lg:px-8">
         <div className="text-center mb-16 space-y-6">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-balance bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent leading-tight">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-balance text-slate-800 dark:text-slate-100 leading-tight">
             Maîtrisez l'Anglais avec Élégance
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground text-balance max-w-3xl mx-auto font-light leading-relaxed">
+          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 text-balance max-w-3xl mx-auto font-light leading-relaxed">
             Enrichissez votre vocabulaire avec des verbes soigneusement sélectionnés. 
             Une pratique quotidienne pour des compétences linguistiques durables.
           </p>
         </div>
 
         {/* Statistiques de progression */}
-        <div className="mb-12 space-y-6">
+        <div className="mb-12">
           <ProgressStats />
-          <StudyHistory />
         </div>
 
         {/* Verbs Grid */}
         {mode === 'learn' || mode === 'favorites' ? (
-          <div>
+          <div className="mb-12">
             {mode === 'favorites' && verbs.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-lg text-muted-foreground">
@@ -193,6 +192,11 @@ export default function Home() {
             )}
           </div>
         ) : null}
+
+        {/* Historique d'étude - en dessous des verbes */}
+        <div className="mb-12">
+          <StudyHistory onVerbClick={handleVerbClick} />
+        </div>
       </section>
 
       {/* Modes spéciaux */}
