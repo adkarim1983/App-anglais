@@ -41,6 +41,12 @@ export function VerbCard({ verb, onClick }: VerbCardProps) {
     return '⭐⭐⭐'
   }
 
+  // Extraire le participe passé de "has learned" -> "learned"
+  const getPastParticiple = (verb: Verb) => {
+    if (verb.pastParticiple) return verb.pastParticiple
+    return verb.presentPerfect.replace('has ', '')
+  }
+
   return (
     <Card 
       onClick={onClick}
@@ -92,30 +98,26 @@ export function VerbCard({ verb, onClick }: VerbCardProps) {
           </div>
         </div>
 
-        {/* Conjugaisons avec couleurs alternées */}
+        {/* Formes du verbe - Infinitif, Past Simple, Past Participle */}
         <div className="space-y-2.5 flex-1 text-sm">
-          {/* Present - Bleu */}
+          {/* Infinitive */}
           <div className="space-y-1">
-            <p className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wide">Present</p>
-            <p className="text-slate-800 dark:text-slate-200 font-semibold">{verb.present}</p>
+            <p className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wide">Infinitive</p>
+            <p className="text-slate-800 dark:text-slate-200 font-semibold">{verb.english.toLowerCase()}</p>
           </div>
           
-          {/* Past - Indigo */}
+          {/* Past Simple */}
           <div className="space-y-1">
-            <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wide">Past</p>
+            <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wide">Past Simple</p>
             <p className="text-slate-800 dark:text-slate-200 font-semibold">{verb.past}</p>
           </div>
           
-          {/* Future - Cyan */}
+          {/* Past Participle */}
           <div className="space-y-1">
-            <p className="text-xs font-bold text-cyan-600 dark:text-cyan-400 uppercase tracking-wide">Future</p>
-            <p className="text-slate-800 dark:text-slate-200 font-semibold">{verb.future}</p>
-          </div>
-          
-          {/* Present Perfect - Violet */}
-          <div className="space-y-1">
-            <p className="text-xs font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wide">Present Perfect</p>
-            <p className="text-slate-800 dark:text-slate-200 font-semibold">{verb.presentPerfect}</p>
+            <p className="text-xs font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wide">Past Participle</p>
+            <p className="text-slate-800 dark:text-slate-200 font-semibold">
+              {verb.pastParticiple || getPastParticiple(verb)}
+            </p>
           </div>
         </div>
 
