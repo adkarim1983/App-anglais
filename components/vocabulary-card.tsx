@@ -2,10 +2,10 @@
 
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { isVerbLearned, isFavorite, toggleFavorite } from '@/lib/progress'
+import { isVerbLearned, isFavorite, toggleFavorite, isMastered, isToReview, markAsMastered, markToReview, clearItemStatus } from '@/lib/progress'
 import { speakVerb } from '@/lib/speech'
 import { useEffect, useState } from 'react'
-import { Volume2, Heart } from 'lucide-react'
+import { Volume2, Heart, CheckCircle2, RotateCcw } from 'lucide-react'
 import { VocabularyItem } from '@/lib/vocabulary'
 
 interface VocabularyCardProps {
@@ -16,10 +16,14 @@ interface VocabularyCardProps {
 export function VocabularyCard({ item, onClick }: VocabularyCardProps) {
   const [learned, setLearned] = useState(false)
   const [favorite, setFavorite] = useState(false)
+  const [mastered, setMastered] = useState(false)
+  const [toReview, setToReview] = useState(false)
 
   useEffect(() => {
     setLearned(isVerbLearned(item.id))
     setFavorite(isFavorite(item.id))
+    setMastered(isMastered(item.id))
+    setToReview(isToReview(item.id))
   }, [item.id])
 
   const handlePlayAudio = (e: React.MouseEvent) => {
@@ -31,6 +35,34 @@ export function VocabularyCard({ item, onClick }: VocabularyCardProps) {
     e.stopPropagation()
     toggleFavorite(item.id)
     setFavorite(!favorite)
+  }
+
+  const handleMarkAsMastered = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (mastered) {
+      // Si déjà maîtrisé, retirer le statut
+      clearItemStatus(item.id)
+      setMastered(false)
+    } else {
+      // Marquer comme maîtrisé
+      markAsMastered(item.id)
+      setMastered(true)
+      setToReview(false)
+    }
+  }
+
+  const handleMarkToReview = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (toReview) {
+      // Si déjà à revoir, retirer le statut
+      clearItemStatus(item.id)
+      setToReview(false)
+    } else {
+      // Marquer comme à revoir
+      markToReview(item.id)
+      setToReview(true)
+      setMastered(false)
+    }
   }
 
   const getDifficultyStars = () => {
@@ -208,21 +240,53 @@ export function VocabularyCard({ item, onClick }: VocabularyCardProps) {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between mt-3">
-          {learned && (
-            <span className="text-xs font-semibold px-2 py-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 dark:from-emerald-400 dark:to-teal-400 text-white shadow-sm">
-              ✓ Appris
+        <div className="flex flex-col gap-2 mt-3">
+          <div className="flex items-center justify-between">
+            {learned && (
+              <span className="text-xs font-semibold px-2 py-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 dark:from-emerald-400 dark:to-teal-400 text-white shadow-sm">
+                ✓ Appris
+              </span>
+            )}
+            <span className={`text-xs font-medium ml-auto px-2 py-1 rounded-full ${
+              item.difficulty === 'easy' 
+                ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10' 
+                : item.difficulty === 'medium' 
+                ? 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10' 
+                : 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10'
+            }`}>
+              {getDifficultyStars()} {item.difficulty === 'easy' ? 'Facile' : item.difficulty === 'medium' ? 'Moyen' : 'Difficile'}
             </span>
-          )}
-          <span className={`text-xs font-medium ml-auto px-2 py-1 rounded-full ${
-            item.difficulty === 'easy' 
-              ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10' 
-              : item.difficulty === 'medium' 
-              ? 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10' 
-              : 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10'
-          }`}>
-            {getDifficultyStars()} {item.difficulty === 'easy' ? 'Facile' : item.difficulty === 'medium' ? 'Moyen' : 'Difficile'}
-          </span>
+          </div>
+          
+          {/* Boutons Maîtrisé / À revoir */}
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              variant={mastered ? "default" : "outline"}
+              onClick={handleMarkAsMastered}
+              className={`flex-1 h-8 text-xs transition-all ${
+                mastered 
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white border-0 shadow-md' 
+                  : 'border-green-500/50 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-500/10'
+              }`}
+            >
+              <CheckCircle2 className={`h-3.5 w-3.5 mr-1 ${mastered ? 'fill-current' : ''}`} />
+              Maîtrisé
+            </Button>
+            <Button
+              size="sm"
+              variant={toReview ? "default" : "outline"}
+              onClick={handleMarkToReview}
+              className={`flex-1 h-8 text-xs transition-all ${
+                toReview 
+                  ? 'bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white border-0 shadow-md' 
+                  : 'border-orange-500/50 text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-500/10'
+              }`}
+            >
+              <RotateCcw className="h-3.5 w-3.5 mr-1" />
+              À revoir
+            </Button>
+          </div>
         </div>
       </div>
     </Card>

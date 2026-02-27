@@ -5,10 +5,18 @@ import { Button } from '@/components/ui/button'
 import { getUserProgress, resetProgress } from '@/lib/progress'
 import { useState, useEffect } from 'react'
 import { getAllVerbs } from '@/lib/verbs'
+import { MasteryDialog } from '@/components/mastery-dialog'
+import { VocabularyItem } from '@/lib/vocabulary'
 
-export function ProgressStats() {
+interface ProgressStatsProps {
+  onItemClick?: (item: VocabularyItem) => void
+}
+
+export function ProgressStats({ onItemClick }: ProgressStatsProps) {
   const [progress, setProgress] = useState(getUserProgress())
   const [showReset, setShowReset] = useState(false)
+  const [masteryDialogOpen, setMasteryDialogOpen] = useState(false)
+  const [masteryDialogType, setMasteryDialogType] = useState<'mastered' | 'toReview'>('mastered')
   const totalVerbs = getAllVerbs().length
 
   useEffect(() => {
@@ -26,6 +34,18 @@ export function ProgressStats() {
       setProgress(getUserProgress())
       setShowReset(false)
       window.location.reload()
+    }
+  }
+
+  const handleOpenMasteryDialog = (type: 'mastered' | 'toReview') => {
+    setMasteryDialogType(type)
+    setMasteryDialogOpen(true)
+  }
+
+  const handleItemClick = (item: VocabularyItem) => {
+    setMasteryDialogOpen(false)
+    if (onItemClick) {
+      onItemClick(item)
     }
   }
 
@@ -71,7 +91,7 @@ export function ProgressStats() {
         )}
 
         {/* Statistiques principales */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
             <p className="text-xs text-muted-foreground mb-1">Verbes appris</p>
             <p className="text-2xl font-bold text-primary">
@@ -79,6 +99,24 @@ export function ProgressStats() {
               <span className="text-sm text-muted-foreground">/{totalVerbs}</span>
             </p>
           </div>
+
+          <button
+            onClick={() => handleOpenMasteryDialog('mastered')}
+            className="p-4 rounded-xl bg-gradient-to-br from-green-500/10 to-emerald-500/5 border border-green-500/20 hover:border-green-500/40 hover:shadow-lg hover:shadow-green-500/10 transition-all duration-300 cursor-pointer text-left"
+          >
+            <p className="text-xs text-muted-foreground mb-1">✅ Maîtrisés</p>
+            <p className="text-2xl font-bold text-green-600 dark:text-green-400">{progress.masteredIds.length}</p>
+            <p className="text-xs text-green-600/70 dark:text-green-400/70 mt-1">Cliquer pour voir</p>
+          </button>
+
+          <button
+            onClick={() => handleOpenMasteryDialog('toReview')}
+            className="p-4 rounded-xl bg-gradient-to-br from-orange-500/10 to-amber-500/5 border border-orange-500/20 hover:border-orange-500/40 hover:shadow-lg hover:shadow-orange-500/10 transition-all duration-300 cursor-pointer text-left"
+          >
+            <p className="text-xs text-muted-foreground mb-1">🔁 À revoir</p>
+            <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{progress.toReviewIds.length}</p>
+            <p className="text-xs text-orange-600/70 dark:text-orange-400/70 mt-1">Cliquer pour voir</p>
+          </button>
 
           <div className="p-4 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
             <p className="text-xs text-muted-foreground mb-1">Série actuelle</p>
@@ -88,18 +126,6 @@ export function ProgressStats() {
           <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
             <p className="text-xs text-muted-foreground mb-1">Progression</p>
             <p className="text-2xl font-bold text-primary">{progressPercentage}%</p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
-            <p className="text-xs text-muted-foreground mb-1">Dernière étude</p>
-            <p className="text-sm font-semibold text-accent">
-              {progress.lastStudyDate 
-                ? new Date(progress.lastStudyDate).toLocaleDateString('fr-FR', { 
-                    day: 'numeric', 
-                    month: 'short' 
-                  })
-                : 'Jamais'}
-            </p>
           </div>
         </div>
 
@@ -126,6 +152,15 @@ export function ProgressStats() {
           </div>
         )}
       </div>
+
+      {/* Mastery Dialog */}
+      <MasteryDialog
+        open={masteryDialogOpen}
+        onOpenChange={setMasteryDialogOpen}
+        type={masteryDialogType}
+        itemIds={masteryDialogType === 'mastered' ? progress.masteredIds : progress.toReviewIds}
+        onItemClick={handleItemClick}
+      />
     </Card>
   )
 }

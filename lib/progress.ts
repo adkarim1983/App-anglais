@@ -3,6 +3,8 @@
 export interface UserProgress {
   learnedVerbIds: number[]
   favoriteVerbIds: number[]
+  masteredIds: number[] // IDs des items maîtrisés ✅
+  toReviewIds: number[] // IDs des items à revoir 🔁
   lastStudyDate: string
   totalVerbsLearned: number
   streak: number
@@ -37,6 +39,12 @@ export function getUserProgress(): UserProgress {
     // Migration: Ajouter les nouveaux champs s'ils n'existent pas
     if (!progress.favoriteVerbIds) {
       progress.favoriteVerbIds = []
+    }
+    if (!progress.masteredIds) {
+      progress.masteredIds = []
+    }
+    if (!progress.toReviewIds) {
+      progress.toReviewIds = []
     }
     if (!progress.dailyGoal) {
       progress.dailyGoal = 10
@@ -343,6 +351,8 @@ function getDefaultProgress(): UserProgress {
   return {
     learnedVerbIds: [],
     favoriteVerbIds: [],
+    masteredIds: [],
+    toReviewIds: [],
     lastStudyDate: '',
     totalVerbsLearned: 0,
     streak: 0,
@@ -365,4 +375,85 @@ function getDaysDifference(date1: string, date2: string): number {
   const d2 = new Date(date2)
   const diffTime = Math.abs(d2.getTime() - d1.getTime())
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+}
+
+/**
+ * Marque un item comme maîtrisé
+ */
+export function markAsMastered(itemId: number): UserProgress {
+  const progress = getUserProgress()
+  
+  // Ajouter à masteredIds si pas déjà présent
+  if (!progress.masteredIds.includes(itemId)) {
+    progress.masteredIds.push(itemId)
+  }
+  
+  // Retirer de toReviewIds si présent
+  progress.toReviewIds = progress.toReviewIds.filter(id => id !== itemId)
+  
+  saveUserProgress(progress)
+  return progress
+}
+
+/**
+ * Marque un item comme à revoir
+ */
+export function markToReview(itemId: number): UserProgress {
+  const progress = getUserProgress()
+  
+  // Ajouter à toReviewIds si pas déjà présent
+  if (!progress.toReviewIds.includes(itemId)) {
+    progress.toReviewIds.push(itemId)
+  }
+  
+  // Retirer de masteredIds si présent
+  progress.masteredIds = progress.masteredIds.filter(id => id !== itemId)
+  
+  saveUserProgress(progress)
+  return progress
+}
+
+/**
+ * Vérifie si un item est maîtrisé
+ */
+export function isMastered(itemId: number): boolean {
+  const progress = getUserProgress()
+  return progress.masteredIds.includes(itemId)
+}
+
+/**
+ * Vérifie si un item est à revoir
+ */
+export function isToReview(itemId: number): boolean {
+  const progress = getUserProgress()
+  return progress.toReviewIds.includes(itemId)
+}
+
+/**
+ * Obtient tous les IDs des items maîtrisés
+ */
+export function getMasteredIds(): number[] {
+  const progress = getUserProgress()
+  return progress.masteredIds
+}
+
+/**
+ * Obtient tous les IDs des items à revoir
+ */
+export function getToReviewIds(): number[] {
+  const progress = getUserProgress()
+  return progress.toReviewIds
+}
+
+/**
+ * Retire les statuts maîtrisé/à revoir d'un item
+ */
+export function clearItemStatus(itemId: number): UserProgress {
+  const progress = getUserProgress()
+  
+  progress.masteredIds = progress.masteredIds.filter(id => id !== itemId)
+  progress.toReviewIds = progress.toReviewIds.filter(id => id !== itemId)
+  
+  saveUserProgress(progress)
+  return progress
 }

@@ -178,7 +178,7 @@ export default function Home() {
 
         {/* Statistiques de progression */}
         <div className="mb-12">
-          <ProgressStats />
+          <ProgressStats onItemClick={handleVocabularyClick} />
         </div>
 
         {/* Section Verbes Essentiels */}
