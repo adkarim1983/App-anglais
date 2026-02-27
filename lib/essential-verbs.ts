@@ -3,7 +3,7 @@
 
 import { Verb } from './verbs'
 
-export const ESSENTIAL_VERBS: Omit<Verb, 'id'>[] = [
+export const ESSENTIAL_VERBS: Omit<Verb, 'id' | 'type'>[] = [
   // Verbes être et avoir
   {
     english: 'Be',
@@ -528,6 +528,7 @@ export const ESSENTIAL_VERBS: Omit<Verb, 'id'>[] = [
 
 // Ajouter les IDs aux verbes essentiels (commencer à 10000 pour éviter les conflits)
 export const ESSENTIAL_VERBS_WITH_IDS: Verb[] = ESSENTIAL_VERBS.map((verb, index) => ({
+  type: 'verb' as const,
   ...verb,
   id: 10000 + index
 }))

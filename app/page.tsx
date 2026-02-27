@@ -2,8 +2,10 @@
 
 import { Button } from '@/components/ui/button'
 import { useState, useEffect } from 'react'
-import { VerbCard, type Verb } from '@/components/verb-card'
+import { type Verb } from '@/components/verb-card'
 import { VerbDetailDialog } from '@/components/verb-detail-dialog'
+import { VocabularyDetailDialog } from '@/components/vocabulary-detail-dialog'
+import { VocabularyItem } from '@/lib/vocabulary'
 import { ProgressStats } from '@/components/progress-stats'
 import { AudioIndicator } from '@/components/audio-indicator'
 import { AppNav } from '@/components/app-nav'
@@ -12,15 +14,18 @@ import { FlashcardMode } from '@/components/flashcard-mode'
 import { FillBlanksMode } from '@/components/fill-blanks-mode'
 import { StudyHistory } from '@/components/study-history'
 import { EssentialVerbsSection } from '@/components/essential-verbs-section'
+import { VocabularyTabs } from '@/components/vocabulary-tabs'
 import { fetchVerbs, getVerbById, type VerbCategory } from '@/lib/verbs'
 import { getUserProgress, markVerbAsLearned, getLearnedVerbIds, getFavoriteVerbIds, getDailyProgress } from '@/lib/progress'
 
 const VERBS_PER_DAY = 10
 
 export default function Home() {
-  const [verbs, setVerbs] = useState<Verb[]>([])
+  const [verbs, setVerbs] = useState<VocabularyItem[]>([])
   const [selectedVerb, setSelectedVerb] = useState<Verb | null>(null)
+  const [selectedVocabulary, setSelectedVocabulary] = useState<VocabularyItem | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [vocabularyDialogOpen, setVocabularyDialogOpen] = useState(false)
   const [progress, setProgress] = useState(getUserProgress())
   const [isLoading, setIsLoading] = useState(false)
   const [mode, setMode] = useState<'learn' | 'quiz' | 'flashcards' | 'fill-blanks' | 'favorites'>('learn')
@@ -43,7 +48,7 @@ export default function Home() {
     try {
       if (mode === 'favorites') {
         const favoriteIds = getFavoriteVerbIds()
-        const favoriteVerbs = favoriteIds.map(id => getVerbById(id)).filter(Boolean) as Verb[]
+        const favoriteVerbs = favoriteIds.map(id => getVerbById(id)).filter(Boolean) as VocabularyItem[]
         setVerbs(favoriteVerbs)
       } else {
         const learnedIds = getLearnedVerbIds()
@@ -64,6 +69,16 @@ export default function Home() {
     
     // Marquer le verbe comme appris
     const updatedProgress = markVerbAsLearned(verb.id)
+    setProgress(updatedProgress)
+    setDailyProgress(getDailyProgress())
+  }
+
+  const handleVocabularyClick = (item: VocabularyItem) => {
+    setSelectedVocabulary(item)
+    setVocabularyDialogOpen(true)
+    
+    // Marquer l'item comme appris
+    const updatedProgress = markVerbAsLearned(item.id)
     setProgress(updatedProgress)
     setDailyProgress(getDailyProgress())
   }
@@ -171,42 +186,23 @@ export default function Home() {
           <EssentialVerbsSection onVerbClick={handleVerbClick} />
         </div>
 
-        {/* Titre pour les verbes quotidiens */}
+        {/* Titre pour le vocabulaire */}
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2">
-            Verbes du Jour
+            Vocabulaire du Jour
           </h2>
           <p className="text-slate-600 dark:text-slate-400">
-            Découvrez 10 nouveaux verbes chaque jour pour enrichir votre vocabulaire
+            Découvrez des verbes, adjectifs, adverbes et expressions pour enrichir votre vocabulaire
           </p>
         </div>
 
-        {/* Verbs Grid */}
+        {/* Tabs pour Verbes, Adjectifs, Adverbes, Expressions */}
         {mode === 'learn' || mode === 'favorites' ? (
-          <div className="mb-12">
-            {mode === 'favorites' && verbs.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-lg text-muted-foreground">
-                  Vous n'avez pas encore de verbes favoris.
-                </p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Cliquez sur le ❤️ sur les cartes pour ajouter des verbes à vos favoris.
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-                {verbs.map((verb, index) => (
-                  <div
-                    key={verb.id}
-                    style={{ animationDelay: `${index * 50}ms` }}
-                    className="animate-in fade-in slide-in-from-bottom-4 duration-700"
-                  >
-                    <VerbCard verb={verb} onClick={() => handleVerbClick(verb)} />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <VocabularyTabs 
+            verbs={verbs}
+            onItemClick={handleVocabularyClick}
+            isLoading={isLoading}
+          />
         ) : null}
 
         {/* Historique d'étude - en dessous des verbes */}
@@ -217,13 +213,13 @@ export default function Home() {
 
       {/* Modes spéciaux */}
       {mode === 'quiz' && verbs.length > 0 && (
-        <QuizMode verbs={verbs} onClose={handleCloseMode} />
+        <QuizMode verbs={verbs.filter(v => v.type === 'verb') as Verb[]} onClose={handleCloseMode} />
       )}
       {mode === 'flashcards' && verbs.length > 0 && (
-        <FlashcardMode verbs={verbs} onClose={handleCloseMode} />
+        <FlashcardMode verbs={verbs.filter(v => v.type === 'verb') as Verb[]} onClose={handleCloseMode} />
       )}
       {mode === 'fill-blanks' && verbs.length > 0 && (
-        <FillBlanksMode verbs={verbs} onClose={handleCloseMode} />
+        <FillBlanksMode verbs={verbs.filter(v => v.type === 'verb') as Verb[]} onClose={handleCloseMode} />
       )}
 
       {/* Verb Detail Dialog */}
@@ -231,6 +227,13 @@ export default function Home() {
         verb={selectedVerb} 
         open={dialogOpen} 
         onOpenChange={setDialogOpen}
+      />
+
+      {/* Vocabulary Detail Dialog */}
+      <VocabularyDetailDialog 
+        item={selectedVocabulary} 
+        open={vocabularyDialogOpen} 
+        onOpenChange={setVocabularyDialogOpen}
       />
 
       {/* CTA Section */}

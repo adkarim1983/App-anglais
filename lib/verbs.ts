@@ -2,6 +2,7 @@ export type VerbCategory = 'action' | 'communication' | 'thinking' | 'creation' 
 
 export interface Verb {
   id: number
+  type: 'verb'
   english: string
   french: string
   present: string

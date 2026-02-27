@@ -1,6 +1,6 @@
 import { Verb } from './verbs'
 
-export const ALL_VERBS_DATA: Omit<Verb, 'id'>[] = [
+export const ALL_VERBS_DATA: Omit<Verb, 'id' | 'type'>[] = [
   { 
     english: 'Learn', 
     french: 'Apprendre', 
@@ -128,6 +128,7 @@ export const ALL_VERBS_DATA: Omit<Verb, 'id'>[] = [
 ]
 
 export const ALL_VERBS: Verb[] = ALL_VERBS_DATA.map((verb, index) => ({
+  type: 'verb' as const,
   ...verb,
   id: index + 1
 }))
