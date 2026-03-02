@@ -9,7 +9,9 @@ import { VocabularyItem } from '@/lib/vocabulary'
 import { ProgressStats } from '@/components/progress-stats'
 import { AudioIndicator } from '@/components/audio-indicator'
 import { AppNav } from '@/components/app-nav'
+import { SiteNav } from '@/components/site-nav'
 import { QuizMode } from '@/components/quiz-mode'
+import Link from 'next/link'
 import { FlashcardMode } from '@/components/flashcard-mode'
 import { FillBlanksMode } from '@/components/fill-blanks-mode'
 import { StudyHistory } from '@/components/study-history'
@@ -119,7 +121,7 @@ export default function Home() {
           <div className="flex items-center justify-between gap-4">
             <div className="space-y-1 flex-1">
               <h1 className="text-2xl font-bold tracking-tight text-blue-700 dark:text-blue-400 sm:text-3xl">
-                Daily English Verbs
+                App-Anglais
               </h1>
               <p className="text-sm text-slate-600 dark:text-slate-400 font-light">
                 Maîtrisez 10 nouveaux verbes chaque jour
@@ -141,25 +143,61 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Navigation */}
-            <AppNav
-              onModeChange={handleModeChange}
-              onCategoryChange={handleCategoryChange}
-              currentCategory={category}
-              favoriteCount={progress.favoriteVerbIds.length}
-            />
+            {/* Navigation Pages */}
+            <nav className="hidden lg:flex items-center gap-1">
+              <Link href="/about">
+                <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary">
+                  À Propos
+                </Button>
+              </Link>
+              <Link href="/regular-verbs">
+                <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary">
+                  Verbes Réguliers
+                </Button>
+              </Link>
+              <Link href="/irregular-verbs">
+                <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary">
+                  Verbes Irréguliers
+                </Button>
+              </Link>
+              <Link href="/quiz">
+                <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary">
+                  Quiz
+                </Button>
+              </Link>
+              <Link href="/tips">
+                <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary">
+                  Astuces
+                </Button>
+              </Link>
+            </nav>
 
-            <Button
-              onClick={handleGenerateNewVerbs}
-              disabled={isLoading}
-              className="relative overflow-hidden bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 border-0 disabled:opacity-50"
-              size="lg"
-            >
-              <span className="relative z-10">
-                {isLoading ? 'Chargement...' : 'Nouveaux'}
-              </span>
-              <div className="absolute inset-0 animate-shimmer" />
-            </Button>
+            {/* Navigation Mobile */}
+            <div className="lg:hidden">
+              <SiteNav />
+            </div>
+
+            {/* App Navigation */}
+            <div className="flex items-center gap-2">
+              <AppNav
+                onModeChange={handleModeChange}
+                onCategoryChange={handleCategoryChange}
+                currentCategory={category}
+                favoriteCount={progress.favoriteVerbIds.length}
+              />
+              
+              <Button
+                onClick={handleGenerateNewVerbs}
+                disabled={isLoading}
+                className="relative overflow-hidden bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 border-0 disabled:opacity-50"
+                size="lg"
+              >
+                <span className="relative z-10">
+                  {isLoading ? 'Chargement...' : 'Nouveaux'}
+                </span>
+                <div className="absolute inset-0 animate-shimmer" />
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -258,22 +296,82 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Navigation Sections */}
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <a href="/about" className="group">
+            <div className="p-6 rounded-xl border-2 border-border hover:border-primary transition-all hover:shadow-lg bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30">
+              <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+                À Propos
+              </h3>
+              <p className="text-slate-600 dark:text-slate-400">
+                Découvrez notre méthode d'apprentissage innovante
+              </p>
+            </div>
+          </a>
+
+          <a href="/regular-verbs" className="group">
+            <div className="p-6 rounded-xl border-2 border-border hover:border-primary transition-all hover:shadow-lg bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-950/30 dark:to-blue-950/30">
+              <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+                Verbes Réguliers
+              </h3>
+              <p className="text-slate-600 dark:text-slate-400">
+                100 verbes réguliers avec conjugaisons et exemples
+              </p>
+            </div>
+          </a>
+
+          <a href="/irregular-verbs" className="group">
+            <div className="p-6 rounded-xl border-2 border-border hover:border-primary transition-all hover:shadow-lg bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30">
+              <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+                Verbes Irréguliers
+              </h3>
+              <p className="text-slate-600 dark:text-slate-400">
+                20 verbes irréguliers essentiels à maîtriser
+              </p>
+            </div>
+          </a>
+
+          <a href="/quiz" className="group">
+            <div className="p-6 rounded-xl border-2 border-border hover:border-primary transition-all hover:shadow-lg bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30">
+              <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+                Mini-Quiz
+              </h3>
+              <p className="text-slate-600 dark:text-slate-400">
+                Testez vos connaissances avec des exercices interactifs
+              </p>
+            </div>
+          </a>
+
+          <a href="/tips" className="group">
+            <div className="p-6 rounded-xl border-2 border-border hover:border-primary transition-all hover:shadow-lg bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-950/30 dark:to-orange-950/30">
+              <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+                Astuces d'Apprentissage
+              </h3>
+              <p className="text-slate-600 dark:text-slate-400">
+                Conseils pratiques pour progresser rapidement
+              </p>
+            </div>
+          </a>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="relative border-t border-border/20 bg-background/60 backdrop-blur-xl py-12 mt-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6 text-sm">
             <p className="text-muted-foreground font-light">
-              &copy; 2024 Daily English Verbs. Tous droits réservés.
+              &copy; 2024 App-Anglais. Tous droits réservés.
             </p>
             <div className="flex gap-8">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-light">
+              <a href="/about" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-light">
                 À propos
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-light">
-                Contact
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-light">
+              <a href="/privacy" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-light">
                 Confidentialité
+              </a>
+              <a href="/terms" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-light">
+                Conditions
               </a>
             </div>
           </div>

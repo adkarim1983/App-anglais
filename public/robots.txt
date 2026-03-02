@@ -1,0 +1,13 @@
+# robots.txt pour App-Anglais
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://votre-domaine.vercel.app/sitemap.xml
+
+# Optimisation pour Google AdSense
+User-agent: Mediapartners-Google
+Allow: /
+
+# Crawl-delay pour éviter la surcharge
+Crawl-delay: 1
