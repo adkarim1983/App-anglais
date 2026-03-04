@@ -16,6 +16,7 @@ import { FlashcardMode } from '@/components/flashcard-mode'
 import { FillBlanksMode } from '@/components/fill-blanks-mode'
 import { StudyHistory } from '@/components/study-history'
 import { EssentialVerbsSection } from '@/components/essential-verbs-section'
+import { EssentialAuxiliaryVerbs } from '@/components/essential-auxiliary-verbs'
 import { VocabularyTabs } from '@/components/vocabulary-tabs'
 import { fetchVerbs, getVerbById, type VerbCategory } from '@/lib/verbs'
 import { getUserProgress, markVerbAsLearned, getLearnedVerbIds, getFavoriteVerbIds, getDailyProgress } from '@/lib/progress'
@@ -222,6 +223,11 @@ export default function Home() {
         {/* Section Verbes Essentiels */}
         <div className="mb-12">
           <EssentialVerbsSection onVerbClick={handleVerbClick} />
+        </div>
+
+        {/* Section Verbes Auxiliaires (To Be & To Have) */}
+        <div className="mb-16">
+          <EssentialAuxiliaryVerbs />
         </div>
 
         {/* Titre pour le vocabulaire */}

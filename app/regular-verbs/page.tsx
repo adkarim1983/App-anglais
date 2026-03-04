@@ -1,10 +1,9 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PageHeader } from '@/components/page-header'
-import Link from 'next/link'
 import { useState } from 'react'
+import { ALL_VERBS } from '@/lib/verbs-data'
 
 interface RegularVerb {
   infinitive: string
@@ -15,48 +14,17 @@ interface RegularVerb {
   examples: string[]
 }
 
-const REGULAR_VERBS: RegularVerb[] = [
-  {
-    infinitive: 'work',
-    french: 'travailler',
-    present: 'work/works',
-    past: 'worked',
-    future: 'will work',
-    examples: ['I work from home every day.', 'She worked late yesterday.', 'They will work on the project tomorrow.']
-  },
-  {
-    infinitive: 'play',
-    french: 'jouer',
-    present: 'play/plays',
-    past: 'played',
-    future: 'will play',
-    examples: ['He plays guitar beautifully.', 'We played soccer last weekend.', 'She will play in the concert next month.']
-  },
-  {
-    infinitive: 'study',
-    french: 'étudier',
-    present: 'study/studies',
-    past: 'studied',
-    future: 'will study',
-    examples: ['I study English every morning.', 'He studied medicine at university.', 'They will study abroad next year.']
-  },
-  {
-    infinitive: 'watch',
-    french: 'regarder',
-    present: 'watch/watches',
-    past: 'watched',
-    future: 'will watch',
-    examples: ['She watches movies on weekends.', 'We watched the game together.', 'I will watch the documentary tonight.']
-  },
-  {
-    infinitive: 'listen',
-    french: 'écouter',
-    present: 'listen/listens',
-    past: 'listened',
-    future: 'will listen',
-    examples: ['He listens to music while working.', 'They listened carefully to the teacher.', 'We will listen to the podcast later.']
-  }
-]
+// Filtrer les verbes réguliers depuis la base de données
+const REGULAR_VERBS: RegularVerb[] = ALL_VERBS
+  .filter(verb => !verb.isIrregular)
+  .map(verb => ({
+    infinitive: verb.english,
+    french: verb.french,
+    present: verb.present,
+    past: verb.past,
+    future: verb.future,
+    examples: [verb.example || `I ${verb.english.toLowerCase()} every day.`]
+  }))
 
 export default function RegularVerbsPage() {
   const [selectedVerb, setSelectedVerb] = useState<RegularVerb | null>(null)
@@ -74,7 +42,7 @@ export default function RegularVerbsPage() {
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
             Les verbes réguliers suivent un schéma de conjugaison prévisible. Pour former le passé simple et le participe passé, 
-            il suffit d'ajouter -ed à la forme de base du verbe. Découvrez notre sélection de 100 verbes réguliers essentiels 
+            il suffit d'ajouter -ed à la forme de base du verbe. Découvrez notre sélection de {REGULAR_VERBS.length} verbes réguliers essentiels 
             avec leurs conjugaisons et exemples d'utilisation.
           </p>
         </div>
