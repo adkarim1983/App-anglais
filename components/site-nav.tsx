@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Menu, BookOpen, FileText, HelpCircle, Lightbulb } from 'lucide-react'
+import { Menu, BookOpen, FileText, HelpCircle, Lightbulb, Mail } from 'lucide-react'
 
 export function SiteNav() {
   return (
@@ -53,6 +53,12 @@ export function SiteNav() {
           <Link href="/tips" className="flex items-center gap-2 cursor-pointer">
             <Lightbulb className="h-4 w-4" />
             <span>Astuces d'Apprentissage</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/contact" className="flex items-center gap-2 cursor-pointer">
+            <Mail className="h-4 w-4" />
+            <span>Contact</span>
           </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>

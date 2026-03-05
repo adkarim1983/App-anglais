@@ -3,17 +3,18 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { PageHeader } from '@/components/page-header'
+import { SiteFooter } from '@/components/site-footer'
 import Link from 'next/link'
 import { BookOpen, Target, TrendingUp, Users } from 'lucide-react'
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
+    <main className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 flex flex-col">
       {/* Header */}
       <PageHeader />
 
       {/* Hero Section */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 flex-1">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-slate-800 dark:text-slate-100 mb-6">
             Bienvenue sur App-Anglais
@@ -40,6 +41,48 @@ export default function AboutPage() {
               <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
                 L'apprentissage d'une langue demande de la régularité et de la pratique. C'est pourquoi nous avons développé plusieurs modes d'apprentissage : flashcards, quiz interactifs, exercices à trous et mode dictée. Cette variété d'approches stimule différentes zones de mémorisation et rend l'apprentissage plus engageant et efficace.
               </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Section À propos du créateur */}
+        <div className="max-w-4xl mx-auto mb-16">
+          <Card className="border-2 border-blue-200 dark:border-blue-800 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30">
+            <CardContent className="p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-white text-2xl font-bold">
+                  AK
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+                    À propos du créateur
+                  </h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Développé avec passion</p>
+                </div>
+              </div>
+              
+              <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+                <span className="font-semibold text-blue-700 dark:text-blue-400">App-Anglais</span> est un projet passionné développé par{' '}
+                <span className="font-semibold text-indigo-700 dark:text-indigo-400">AdKarim</span> pour rendre l'apprentissage des langues accessible à tous.
+              </p>
+              
+              <p className="text-base text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+                Convaincu que l'éducation est la clé du développement personnel et professionnel, AdKarim a créé cette plateforme avec une vision claire : 
+                offrir un outil d'apprentissage gratuit, intuitif et efficace qui accompagne chaque apprenant dans son parcours linguistique.
+              </p>
+              
+              <p className="text-base text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+                Chaque fonctionnalité a été pensée pour maximiser l'engagement et la rétention : de la sélection minutieuse du vocabulaire 
+                aux différents modes d'apprentissage, en passant par le système de progression gamifié. L'objectif est simple mais ambitieux : 
+                transformer l'apprentissage de l'anglais en une expérience agréable et enrichissante.
+              </p>
+              
+              <div className="bg-white/50 dark:bg-slate-900/50 p-4 rounded-lg border border-blue-200 dark:border-blue-800 mt-6">
+                <p className="text-sm italic text-slate-700 dark:text-slate-300">
+                  <span className="font-semibold">Mission :</span> Démocratiser l'accès à l'apprentissage des langues et aider des milliers de personnes 
+                  à atteindre leurs objectifs linguistiques, que ce soit pour voyager, travailler à l'international ou simplement enrichir leur culture personnelle.
+                </p>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -96,6 +139,8 @@ export default function AboutPage() {
           </Link>
         </div>
       </section>
+
+      <SiteFooter />
     </main>
   )
 }

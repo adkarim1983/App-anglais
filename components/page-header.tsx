@@ -42,6 +42,11 @@ export function PageHeader() {
                 Astuces
               </Button>
             </Link>
+            <Link href="/contact">
+              <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary">
+                Contact
+              </Button>
+            </Link>
           </nav>
 
           {/* Navigation Mobile */}

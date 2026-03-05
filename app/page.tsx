@@ -10,6 +10,7 @@ import { ProgressStats } from '@/components/progress-stats'
 import { AudioIndicator } from '@/components/audio-indicator'
 import { AppNav } from '@/components/app-nav'
 import { SiteNav } from '@/components/site-nav'
+import { SiteFooter } from '@/components/site-footer'
 import { QuizMode } from '@/components/quiz-mode'
 import Link from 'next/link'
 import { FlashcardMode } from '@/components/flashcard-mode'
@@ -118,57 +119,62 @@ export default function Home() {
 
       {/* Header - Fixed navbar */}
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200 dark:border-slate-700/50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl shadow-sm">
-        <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4">
-            <div className="space-y-1 flex-1">
-              <h1 className="text-2xl font-bold tracking-tight text-blue-700 dark:text-blue-400 sm:text-3xl">
+        <div className="mx-auto max-w-7xl px-4 py-1.5 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex-1">
+              <h1 className="text-lg font-bold tracking-tight text-blue-700 dark:text-blue-400 sm:text-xl">
                 App-Anglais
               </h1>
-              <p className="text-sm text-slate-600 dark:text-slate-400 font-light">
+              <p className="text-[10px] text-slate-600 dark:text-slate-400 font-light hidden sm:block">
                 Maîtrisez 10 nouveaux verbes chaque jour
               </p>
             </div>
 
             {/* Progression quotidienne */}
-            <div className="hidden md:flex items-center gap-4 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border border-blue-200 dark:border-blue-800/50">
+            <div className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border border-blue-200 dark:border-blue-800/50">
               <div className="text-center">
-                <p className="text-xs text-slate-600 dark:text-slate-400">Aujourd'hui</p>
-                <p className="text-lg font-bold text-blue-600 dark:text-blue-400">
+                <p className="text-[10px] text-slate-600 dark:text-slate-400">Aujourd'hui</p>
+                <p className="text-sm font-bold text-blue-600 dark:text-blue-400">
                   {dailyProgress.current}/{dailyProgress.goal}
                 </p>
               </div>
-              <div className="h-8 w-px bg-slate-300 dark:bg-slate-600" />
+              <div className="h-5 w-px bg-slate-300 dark:bg-slate-600" />
               <div className="text-center">
-                <p className="text-xs text-slate-600 dark:text-slate-400">Série</p>
-                <p className="text-lg font-bold text-purple-600 dark:text-purple-400">{progress.streak} 🔥</p>
+                <p className="text-[10px] text-slate-600 dark:text-slate-400">Série</p>
+                <p className="text-sm font-bold text-purple-600 dark:text-purple-400">{progress.streak} 🔥</p>
               </div>
             </div>
 
             {/* Navigation Pages */}
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-0.5">
               <Link href="/about">
-                <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary">
+                <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary h-8 px-2 text-xs">
                   À Propos
                 </Button>
               </Link>
               <Link href="/regular-verbs">
-                <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary">
+                <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary h-8 px-2 text-xs">
                   Verbes Réguliers
                 </Button>
               </Link>
               <Link href="/irregular-verbs">
-                <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary">
+                <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary h-8 px-2 text-xs">
                   Verbes Irréguliers
                 </Button>
               </Link>
               <Link href="/quiz">
-                <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary">
+                <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary h-8 px-2 text-xs">
                   Quiz
                 </Button>
               </Link>
               <Link href="/tips">
-                <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary">
+                <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary h-8 px-2 text-xs">
                   Astuces
+                </Button>
+              </Link>
+              <Link href="/contact">
+                <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-primary h-8 px-2 text-xs">
+                  Contact
                 </Button>
               </Link>
             </nav>
@@ -179,7 +185,7 @@ export default function Home() {
             </div>
 
             {/* App Navigation */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <AppNav
                 onModeChange={handleModeChange}
                 onCategoryChange={handleCategoryChange}
@@ -190,10 +196,10 @@ export default function Home() {
               <Button
                 onClick={handleGenerateNewVerbs}
                 disabled={isLoading}
-                className="relative overflow-hidden bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 border-0 disabled:opacity-50"
-                size="lg"
+                className="relative overflow-hidden bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 border-0 disabled:opacity-50"
+                size="sm"
               >
-                <span className="relative z-10">
+                <span className="relative z-10 text-sm">
                   {isLoading ? 'Chargement...' : 'Nouveaux'}
                 </span>
                 <div className="absolute inset-0 animate-shimmer" />
@@ -204,7 +210,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section - avec padding pour la navbar fixe */}
-      <section className="relative mx-auto max-w-7xl px-4 pt-32 pb-16 sm:px-6 lg:px-8">
+      <section className="relative mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-6 lg:px-8">
         <div className="text-center mb-16 space-y-6">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-balance text-slate-800 dark:text-slate-100 leading-tight">
             Maîtrisez l'Anglais avec Élégance
@@ -363,26 +369,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="relative border-t border-border/20 bg-background/60 backdrop-blur-xl py-12 mt-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 text-sm">
-            <p className="text-muted-foreground font-light">
-              &copy; 2024 App-Anglais. Tous droits réservés.
-            </p>
-            <div className="flex gap-8">
-              <a href="/about" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-light">
-                À propos
-              </a>
-              <a href="/privacy" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-light">
-                Confidentialité
-              </a>
-              <a href="/terms" className="text-muted-foreground hover:text-primary transition-colors duration-200 font-light">
-                Conditions
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
 
       {/* Audio Indicator */}
       <AudioIndicator />
